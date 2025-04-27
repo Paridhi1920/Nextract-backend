@@ -22,7 +22,7 @@ def abstractive_summary(text, length="medium"):
         "detailed": 0.9
     }
 
-    chunks = list(split_into_chunks(text, max_words=400))  # Keep chunks small
+    chunks = list(split_into_chunks(text, max_words=200)) 
     all_summaries = []
 
     for idx, chunk in enumerate(chunks):
