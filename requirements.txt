@@ -5,4 +5,5 @@ torch
 nltk
 pdfplumber
 python-pptx
+docx
 gunicorn
