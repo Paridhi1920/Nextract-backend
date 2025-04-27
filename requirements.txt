@@ -1,0 +1,8 @@
+flask
+flask-cors
+transformers
+torch
+nltk
+pdfplumber
+python-pptx
+gunicorn
