@@ -1,10 +1,8 @@
 from transformers import pipeline
-import nltk
-from nltk.tokenize import sent_tokenize
-import heapq
+
 
 # Load model once
-summarization_pipeline = pipeline("summarization", model="facebook/bart-large-cnn")
+summarization_pipeline = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
 
 # -------------------------------
 # Helper to split text safely (word-level)
