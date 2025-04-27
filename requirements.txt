@@ -1,9 +1,9 @@
-flask
+Flask
 flask-cors
 transformers
 torch
-nltk
 pdfplumber
+python-docx
 python-pptx
-docx
+nltk
 gunicorn
