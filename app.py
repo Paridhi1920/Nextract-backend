@@ -51,9 +51,10 @@ def upload_file():
             print("Summary Length: ", length)
             summary = abstractive_summary(extracted_text, length=length)
             print("Summary: ", summary[:300])
-            return jsonify({"summary": summary})  
+            return jsonify({"summary": summary})
         except Exception as e:
-            print("Summary Generation Error: ", str(e))
+            import traceback
+            traceback.print_exc()  # Add this line to log full error
             return jsonify({"error": f"Summary generation failed: {str(e)}"}), 500
 
     return jsonify({"error": "Invalid file format"}), 400  
