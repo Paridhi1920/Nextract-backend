@@ -1,20 +1,33 @@
-from transformers import pipeline
+import os
+import requests
 
+API_URL = "https://api-inference.huggingface.co/models/sshleifer/distilbart-cnn-12-6"
+headers = {
+    "Authorization": f"Bearer {os.getenv('HF_API_KEY')}"
+}
 
-# Load model once
-summarization_pipeline = pipeline("summarization", model="sshleifer/distilbart-cnn-12-6")
-
-# -------------------------------
-# Helper to split text safely (word-level)
-# -------------------------------
 def split_into_chunks(text, max_words=400):
     words = text.split()
     for i in range(0, len(words), max_words):
         yield " ".join(words[i:i + max_words])
 
-# -------------------------------
-# Abstractive Summary with Safe Chunks
-# -------------------------------
+def query(payload, min_length=30, max_length=150):
+    response = requests.post(API_URL, headers=headers, json={
+        "inputs": payload,
+        "parameters": {
+            "min_length": min_length,
+            "max_length": max_length
+        }
+    })
+    response.raise_for_status()
+    result = response.json()
+
+    if isinstance(result, dict) and "error" in result:
+        raise Exception(f"Hugging Face error: {result['error']}")
+
+    return result[0]["summary_text"]
+
+
 def abstractive_summary(text, length="medium"):
     length_map = {
         "short": 0.3,
@@ -22,7 +35,7 @@ def abstractive_summary(text, length="medium"):
         "detailed": 0.9
     }
 
-    chunks = list(split_into_chunks(text, max_words=200)) 
+    chunks = list(split_into_chunks(text, max_words=200))
     all_summaries = []
 
     for idx, chunk in enumerate(chunks):
@@ -31,16 +44,11 @@ def abstractive_summary(text, length="medium"):
         min_length = max(30, max_length // 2)
 
         try:
-            print(f"Summarizing chunk {idx + 1}/{len(chunks)} → Words: {input_length} | Target: {min_length}-{max_length}")
-            summary = summarization_pipeline(
-                chunk,
-                max_length=max_length,
-                min_length=min_length,
-                do_sample=False
-            )[0]['summary_text']
+            # print(f"Chunk {idx + 1}/{len(chunks)}: {input_length} words → Summary length {min_length}-{max_length}")
+            summary = query(chunk, min_length=min_length, max_length=max_length)
             all_summaries.append(summary)
         except Exception as e:
-            print(f"Chunk {idx + 1} summarization error:", str(e))
+            print(f"Error summarizing chunk {idx + 1}: {str(e)}")
             continue
 
     final_summary = " ".join(all_summaries)
