@@ -5,7 +5,11 @@ from file_handler import extract_text_from_docx, extract_text_from_pdf, extract_
 import os
 
 app = Flask(__name__)
-CORS(app, origins=["https://nextract-frontend-963h.vercel.app", "http://localhost:5173"], supports_credentials=True)
+CORS(app, origins=[
+    "https://nextract-frontend.vercel.app",
+    "https://nextract-frontend-963h.vercel.app", 
+    "http://localhost:5173"
+], supports_credentials=True)
 
 UPLOAD_FOLDER = "uploads"
 ALLOWED_EXTENSIONS = {"pdf", "pptx", "docx"}
