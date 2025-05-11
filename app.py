@@ -5,7 +5,7 @@ from file_handler import extract_text_from_docx, extract_text_from_pdf, extract_
 import os
 
 app = Flask(__name__)
-CORS(app, resources={r"/uploads": {"origins": [
+CORS(app, resources={r"/*": {"origins": [
     "http://localhost:5173",
     "https://nextract-frontend.vercel.app",
     "https://nextract-frontend-963h.vercel.app"
