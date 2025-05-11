@@ -1,10 +1,13 @@
 import os
 import requests
+from dotenv import load_dotenv
 
-API_URL = "https://api-inference.huggingface.co/models/sshleifer/distilbart-cnn-12-6"
-headers = {
-    "Authorization": f"Bearer {os.getenv('HF_API_KEY')}"
-}
+# Load environment variables from .env
+load_dotenv()
+
+API_URL = "https://api-inference.huggingface.co/models/facebook/bart-large-cnn"
+HF_API_KEY = os.getenv("HF_API_KEY") 
+headers = {"Authorization": f"Bearer {HF_API_KEY}"}
 
 def split_into_chunks(text, max_words=400):
     words = text.split()

@@ -2,12 +2,19 @@ import docx
 from pptx import Presentation
 import pdfplumber
 
-def extract_text_from_pdf(pdf_path):
-    text = ""
-    with pdfplumber.open(pdf_path) as pdf:
-        for page in pdf.pages:
-            text += page.extract_text() + "\n"
-    return text.strip()
+def extract_text_from_pdf(file_path):
+    try:
+        with pdfplumber.open(file_path) as pdf:
+            text = ""
+            for page in pdf.pages:
+                try:
+                    text += page.extract_text() + "\n"
+                except Exception as e:
+                    print(f"Error reading page: {e}")
+            return text if text.strip() != "" else "No text extracted."
+    except Exception as e:
+        print(f"PDF extraction failed: {e}")
+        return "PDF extraction failed."
 
 def extract_text_from_docx(docx_path):
     doc = docx.Document(docx_path)
